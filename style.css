@@ -229,14 +229,14 @@ h1, h2, h3 {
 
 .delete-shift-type-btn {
     position: absolute; /* Position relative to the parent .shift-template */
-    top: 2px;
-    right: 3px;
+    top: 4px;
+    right: 4px;
     background: rgba(200, 0, 0, 0.6); /* Semi-transparent red */
     color: white;
     border: none;
     border-radius: 50%; /* Make it circular */
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
     font-size: 12px;
     line-height: 16px; /* Adjust for vertical centering */
     text-align: center;
@@ -250,6 +250,7 @@ h1, h2, h3 {
 /* Adjust padding on the template to make space for two buttons */
 .shift-template {
     padding-right: 50px; /* Increased padding for edit + delete */
+    position: relative; /* Crucial for positioning buttons */
 }
 
 /* Style for the Edit button */
