@@ -227,12 +227,6 @@ h1, h2, h3 {
     margin-top: 10px;
 }
 
-.shift-template {
-    /* Add position relative if not already flex/grid, to position the button */
-    position: relative;
-    padding-right: 25px; /* Make space for the delete button */
-}
-
 .delete-shift-type-btn {
     position: absolute; /* Position relative to the parent .shift-template */
     top: 2px;
