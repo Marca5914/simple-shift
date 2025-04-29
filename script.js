@@ -383,3 +383,120 @@ document.addEventListener('DOMContentLoaded', () => {
     initialize();
 
 }); // End DOMContentLoaded
+
+// --- Existing code from script.js above ---
+
+// --- MODIFIED Shift Template Rendering ---
+function renderShiftTemplates() {
+    // Clear existing templates, including any delete buttons
+    shiftTemplatesContainer.querySelectorAll('.shift-template-wrapper').forEach(el => el.remove()); // Use a wrapper
+
+    if (shiftTypes.length === 0) {
+         // Optional: Display a message if no shift types exist
+         const noShiftsMsg = document.createElement('p');
+         noShiftsMsg.textContent = "No shift types defined.";
+         noShiftsMsg.style.textAlign = 'center';
+         noShiftsMsg.style.fontSize = '0.9em';
+         noShiftsMsg.style.color = '#666';
+         const wrapper = document.createElement('div'); // Keep structure consistent
+         wrapper.classList.add('shift-template-wrapper');
+         wrapper.appendChild(noShiftsMsg);
+         shiftTemplatesContainer.appendChild(wrapper);
+         return;
+    }
+
+
+    shiftTypes.forEach(shift => {
+        const wrapper = document.createElement('div'); // Use a wrapper for easier clearing
+        wrapper.classList.add('shift-template-wrapper');
+
+        const shiftDiv = document.createElement('div');
+        shiftDiv.classList.add('shift-template');
+        if (shift.cssClass) {
+             shiftDiv.classList.add(shift.cssClass);
+        }
+        shiftDiv.style.backgroundColor = shift.color;
+        shiftDiv.style.color = isColorLight(shift.color) ? '#333' : '#fff';
+
+        shiftDiv.setAttribute('draggable', true);
+
+        // Wrap text content in a span for styling/layout control
+        const labelSpan = document.createElement('span');
+        labelSpan.classList.add('label-text');
+        labelSpan.textContent = `${shift.label} (${shift.startTime}-${shift.endTime})`;
+        shiftDiv.appendChild(labelSpan);
+
+        // Store shift data on the draggable element
+        shiftDiv.dataset.label = shift.label;
+        shiftDiv.dataset.color = shift.color;
+        shiftDiv.dataset.startTime = shift.startTime;
+        shiftDiv.dataset.endTime = shift.endTime;
+
+        shiftDiv.addEventListener('dragstart', handleDragStart);
+
+        // --- Add Delete Button ---
+        const deleteBtn = document.createElement('button');
+        deleteBtn.classList.add('delete-shift-type-btn');
+        deleteBtn.innerHTML = '&times;'; // Use HTML entity for 'x'
+        deleteBtn.setAttribute('aria-label', `Delete shift type ${shift.label}`);
+        deleteBtn.dataset.label = shift.label; // Store label here too for easy access
+        deleteBtn.addEventListener('click', handleDeleteShiftType);
+
+        shiftDiv.appendChild(deleteBtn); // Append button to shiftDiv
+        wrapper.appendChild(shiftDiv); // Append shiftDiv to wrapper
+        shiftTemplatesContainer.appendChild(wrapper); // Append wrapper to container
+    });
+}
+
+// --- NEW: Handler for Deleting Shift Type ---
+function handleDeleteShiftType(event) {
+    event.stopPropagation(); // Prevent drag start when clicking delete button
+
+    const labelToDelete = event.target.dataset.label;
+
+    // Confirmation dialog
+    if (confirm(`Are you sure you want to delete the shift type "${labelToDelete}"?\nThis will remove it from the list of available shifts.\n(Shifts already placed on the calendar will NOT be removed automatically).`)) {
+
+        const indexToDelete = shiftTypes.findIndex(shift => shift.label === labelToDelete);
+
+        if (indexToDelete > -1) {
+            shiftTypes.splice(indexToDelete, 1); // Remove from array
+            saveShiftTypes(); // Update localStorage
+            renderShiftTemplates(); // Re-render the list
+        } else {
+            console.error("Could not find shift type to delete:", labelToDelete);
+            alert("Error: Could not find the shift type to delete.");
+        }
+    }
+}
+
+
+// --- Drag and Drop Handlers ---
+function handleDragStart(event) {
+    // Check if the event target is the shift template itself, not the delete button
+    if (event.target.classList.contains('delete-shift-type-btn')) {
+        event.preventDefault(); // Prevent dragging if delete button was somehow the target
+        return;
+    }
+    const shiftElement = event.target.closest('.shift-template'); // Ensure we get data from the main div
+     if (!shiftElement) return;
+
+    const shiftData = {
+        label: shiftElement.dataset.label,
+        color: shiftElement.dataset.color,
+        startTime: shiftElement.dataset.startTime,
+        endTime: shiftElement.dataset.endTime
+    };
+    event.dataTransfer.setData('application/json', JSON.stringify(shiftData));
+    event.dataTransfer.effectAllowed = 'copy';
+}
+
+// --- Rest of the existing script.js code (handleDragOver, handleDragLeave, handleDrop, etc.) ---
+// ... (Make sure initialize calls renderShiftTemplates, which now includes delete buttons) ...
+// ... (No changes needed in addEventListeners, load/save functions, CSV export etc. for this feature) ...
+
+// Ensure the event listener is added correctly within renderShiftTemplates as shown above.
+
+// --- Load initial data and run ---
+loadShiftTypes();
+initialize(); // This will call the modified renderShiftTemplates
