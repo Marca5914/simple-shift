@@ -219,6 +219,42 @@ h1, h2, h3 {
     margin-top: 10px;
 }
 
+.shift-template {
+    /* Add position relative if not already flex/grid, to position the button */
+    position: relative;
+    padding-right: 25px; /* Make space for the delete button */
+}
+
+.delete-shift-type-btn {
+    position: absolute; /* Position relative to the parent .shift-template */
+    top: 2px;
+    right: 3px;
+    background: rgba(200, 0, 0, 0.6); /* Semi-transparent red */
+    color: white;
+    border: none;
+    border-radius: 50%; /* Make it circular */
+    width: 18px;
+    height: 18px;
+    font-size: 12px;
+    line-height: 16px; /* Adjust for vertical centering */
+    text-align: center;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 0;
+    box-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    transition: background-color 0.2s ease;
+}
+
+.delete-shift-type-btn:hover {
+    background: rgba(200, 0, 0, 0.9); /* Darker red on hover */
+}
+
+/* Ensure template text doesn't overlap button badly */
+.shift-template span.label-text { /* We'll wrap the text in a span later */
+     display: block; /* Or inline-block */
+     margin-right: 5px; /* Prevent text running under button */
+}
+
 #add-shift-form button:hover {
     background-color: #45a049;
 }
