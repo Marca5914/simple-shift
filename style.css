@@ -253,6 +253,46 @@ h1, h2, h3 {
     transition: background-color 0.2s ease;
 }
 
+/* Adjust padding on the template to make space for two buttons */
+.shift-template {
+    padding-right: 50px; /* Increased padding for edit + delete */
+}
+
+/* Style for the Edit button */
+.edit-shift-type-btn {
+    position: absolute;
+    top: 4px;
+    /* Position it to the left of the delete button */
+    right: 28px; /* Adjust as needed based on delete button size/spacing */
+    background: rgba(52, 152, 219, 0.8); /* Blue */
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 12px; /* Using a pencil icon font or SVG would be better */
+    line-height: 18px; /* Adjust for vertical centering */
+    text-align: center;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 0;
+    box-shadow: 1px 1px 2px rgba(0,0,0,0.15);
+    transition: background-color 0.2s ease;
+    /* Simple 'E' for edit, consider an icon font like FontAwesome later */
+    font-family: sans-serif;
+}
+
+.edit-shift-type-btn:hover {
+    background: rgba(41, 128, 185, 1.0); /* Darker blue */
+}
+
+/* Ensure label input is visually distinct when disabled */
+#add-shift-form input#shift-label:disabled {
+    background-color: #eee;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
 .delete-shift-type-btn:hover {
     background: rgba(200, 0, 0, 0.9); /* Darker red on hover */
 }
