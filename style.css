@@ -45,6 +45,14 @@ h1, h2, h3 {
     height: fit-content; /* Adjust height as needed */
 }
 
+/* Style for the currently selected shift template */
+.shift-template.selected-shift-template {
+    outline: 3px solid #007bff; /* Prominent blue outline */
+    outline-offset: 2px;
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5); /* Add a glow effect */
+    transform: scale(1.03); /* Slightly larger */
+}
+
 .shift-templates h3 {
     margin-top: 0;
     font-size: 1em;
