@@ -1,0 +1,224 @@
+body {
+    font-family: sans-serif;
+    margin: 20px;
+    background-color: #f4f4f4;
+}
+
+h1, h2, h3 {
+    text-align: center;
+    color: #333;
+}
+
+.controls {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.controls label {
+    margin-right: 5px;
+}
+
+.controls input[type="month"],
+.controls button {
+    padding: 8px 12px;
+    margin: 0 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.controls button:hover {
+    background-color: #e0e0e0;
+}
+
+.scheduler-container {
+    display: flex;
+    gap: 20px;
+}
+
+.shift-templates {
+    width: 200px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    border-radius: 5px;
+    height: fit-content; /* Adjust height as needed */
+}
+
+.shift-templates h3 {
+    margin-top: 0;
+    font-size: 1em;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+.shift-template {
+    padding: 8px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    cursor: grab;
+    text-align: center;
+    font-size: 0.9em;
+    border: 1px solid #ddd;
+    color: #333; /* Default text color */
+}
+
+/* Define colors for default shifts */
+.shift-day { background-color: #add8e6; /* Light Blue */ }
+.shift-night { background-color: #4682b4; /* Steel Blue */ color: white; }
+.shift-back { background-color: #90ee90; /* Light Green */ }
+
+
+.calendar {
+    flex-grow: 1; /* Take remaining space */
+    border: 1px solid #ccc;
+    background-color: #fff;
+    border-radius: 5px;
+    overflow: hidden; /* Contain borders */
+}
+
+.calendar-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    background-color: #eee;
+    font-weight: bold;
+    text-align: center;
+}
+
+.calendar-header > div {
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+}
+.calendar-header > div:last-child {
+    border-right: none;
+}
+
+
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    /* grid-auto-rows: 100px; /* Adjust row height as needed */
+}
+
+.calendar-day {
+    min-height: 100px; /* Ensure minimum height */
+    border-bottom: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    padding: 5px;
+    position: relative; /* For positioning shift info */
+    box-sizing: border-box; /* Include padding/border in element's total width/height */
+}
+
+.calendar-day:nth-child(7n) { /* Remove right border from last column */
+    border-right: none;
+}
+
+/* Style for days outside the current month (optional) */
+.calendar-day.outside-month {
+    background-color: #f9f9f9;
+    color: #aaa;
+}
+
+.calendar-day .day-number {
+    font-weight: bold;
+    font-size: 0.8em;
+    margin-bottom: 5px;
+}
+
+/* Style for shift placed on calendar */
+.shift-on-calendar {
+    padding: 5px;
+    margin-top: 5px;
+    border-radius: 3px;
+    font-size: 0.85em;
+    text-align: center;
+    border: 1px solid #bbb;
+    word-wrap: break-word; /* Prevent long labels from overflowing */
+}
+
+/* Drag and Drop Highlighting */
+.calendar-day.drag-over {
+    background-color: #e0ffe0; /* Light green highlight */
+    border: 2px dashed #90ee90;
+}
+
+
+/* Modal Styling */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more specific */
+    max-width: 400px;
+    border-radius: 5px;
+    position: relative;
+}
+
+.close-btn {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: black;
+    text-decoration: none;
+}
+
+#add-shift-form label {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+#add-shift-form input[type="text"],
+#add-shift-form input[type="time"],
+#add-shift-form input[type="color"] {
+    width: calc(100% - 22px); /* Adjust for padding/border */
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#add-shift-form input[type="color"] {
+    height: 40px; /* Make color picker easier to click */
+    padding: 5px;
+}
+
+
+#add-shift-form button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+}
+
+#add-shift-form button:hover {
+    background-color: #45a049;
+}
