@@ -7,14 +7,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const exportCsvBtn = document.getElementById('export-csv-btn');
     const exportIcalBtn = document.getElementById('export-ical-btn');
     const modal = document.getElementById('add-shift-modal');
-    const modalTitle = document.getElementById('modal-title'); // Get modal title element
+    // Ensure modal exists before trying to query inside it
+    if (!modal) {
+        console.error("Fatal Error: Modal element with ID 'add-shift-modal' not found.");
+        return; // Stop script execution if modal is missing
+    }
+    const modalTitle = document.getElementById('modal-title');
     const closeModalBtn = modal.querySelector('.close-btn');
     const addShiftForm = document.getElementById('add-shift-form');
     const shiftLabelInput = document.getElementById('shift-label');
     const shiftStartTimeInput = document.getElementById('shift-start-time');
     const shiftEndTimeInput = document.getElementById('shift-end-time');
     const shiftColorInput = document.getElementById('shift-color');
-    const modalSubmitButton = addShiftForm.querySelector('button[type="submit"]'); // Get submit button
+    const modalSubmitButton = addShiftForm ? addShiftForm.querySelector('button[type="submit"]') : null;
+
+    // Check if all modal form elements were found
+    if (!modalTitle || !closeModalBtn || !addShiftForm || !shiftLabelInput || !shiftStartTimeInput || !shiftEndTimeInput || !shiftColorInput || !modalSubmitButton) {
+        console.error("Fatal Error: One or more elements within the modal form were not found. Check IDs: modal-title, add-shift-form, shift-label, shift-start-time, shift-end-time, shift-color, and the submit button.");
+        return; // Stop script execution
+    }
+
 
     // --- State ---
     let currentYear, currentMonth;
@@ -172,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
             selectedShiftData = clickedShift;
             clickedTemplateDiv.classList.add('selected-shift-template');
         }
-        console.log("Selected Shift Data:", selectedShiftData);
+        // console.log("Selected Shift Data:", selectedShiftData);
     }
 
     // --- Handler for Clicking a Calendar Day (Placement) ---
@@ -181,41 +193,45 @@ document.addEventListener('DOMContentLoaded', () => {
         if (selectedShiftData && !event.target.closest('.shift-on-calendar')) {
             const targetCell = event.currentTarget;
             const dateStr = targetCell.dataset.date;
-            console.log(`Placing shift ${selectedShiftData.label} on ${dateStr}`);
+            // console.log(`Placing shift ${selectedShiftData.label} on ${dateStr}`);
             // Place a copy of the selected shift data
             scheduledShifts[dateStr] = { ...selectedShiftData };
             saveShift(dateStr, scheduledShifts[dateStr]);
             displayShiftOnCalendar(targetCell, scheduledShifts[dateStr]);
-            // Optional: Deselect template after placing
-            // if (selectedShiftData) {
-            //     const currentlySelected = shiftTemplatesContainer.querySelector('.selected-shift-template');
-            //     if (currentlySelected) { currentlySelected.classList.remove('selected-shift-template'); }
-            //     selectedShiftData = null;
-            // }
         }
     }
 
     // --- Handler for Clicking the Edit Shift Type Button ---
     function handleEditShiftType(event) {
+        console.log("handleEditShiftType called for label:", event.target.dataset.label);
         event.stopPropagation(); // Prevent template selection click
         const labelToEdit = event.target.dataset.label;
         const shiftToEdit = shiftTypes.find(shift => shift.label === labelToEdit);
+        console.log("Found shiftToEdit:", shiftToEdit);
 
         if (shiftToEdit) {
-            editingShiftLabel = labelToEdit; // Set edit mode state
-            // Populate the modal form
+            editingShiftLabel = labelToEdit; // Set edit mode state BEFORE calling openModal
+            console.log("Set editingShiftLabel:", editingShiftLabel);
+            openModal(); // Open the modal first
+
+            // Populate the modal form AFTER it's potentially reset by openModal
+            // This ensures the edit data overrides any reset state if openModal was called quickly
             shiftLabelInput.value = shiftToEdit.label;
             shiftStartTimeInput.value = shiftToEdit.startTime;
             shiftEndTimeInput.value = shiftToEdit.endTime;
             shiftColorInput.value = shiftToEdit.color;
-            // Update modal appearance for editing
+            console.log("Form populated for edit");
+
+            // Update modal appearance for editing (redundant if openModal handles it, but safe)
             modalTitle.textContent = "Edit Shift Type";
             modalSubmitButton.textContent = "Update Shift Type";
             shiftLabelInput.disabled = true; // Disable label editing
-            openModal(); // Open the pre-filled modal
+            console.log("Modal appearance updated for edit");
+
         } else {
             console.error("Could not find shift type to edit:", labelToEdit);
             alert("Error: Could not find the shift type to edit.");
+            editingShiftLabel = null; // Reset state if shift not found
         }
     }
 
@@ -310,31 +326,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Modal Handling ---
     function openModal() {
-        // Reset to 'Add' mode defaults ONLY IF NOT in edit mode
+        console.log("openModal called. Current editingShiftLabel:", editingShiftLabel);
+        // Reset to 'Add' mode defaults ONLY IF NOT in edit mode *at the moment openModal is called*
         if (!editingShiftLabel) {
-            addShiftForm.reset(); // Clear form only when adding
+            console.log("Configuring modal for ADD mode.");
+            addShiftForm.reset(); // Clear form
             modalTitle.textContent = "Add New Shift Type";
             modalSubmitButton.textContent = "Save Shift Type";
-            shiftLabelInput.disabled = false; // Ensure label input is enabled for adding
+            shiftLabelInput.disabled = false; // Ensure label input is enabled
+            shiftLabelInput.focus(); // Focus label if adding
+        } else {
+            // If editingShiftLabel IS set, configure for EDIT mode
+            console.log("Configuring modal for EDIT mode.");
+            modalTitle.textContent = "Edit Shift Type";
+            modalSubmitButton.textContent = "Update Shift Type";
+            shiftLabelInput.disabled = true; // Ensure label input is disabled
+            shiftStartTimeInput.focus(); // Focus time if editing
         }
         // Always display the modal
         modal.style.display = 'block';
-        // Focus the appropriate field
-        if (editingShiftLabel) {
-            shiftStartTimeInput.focus(); // Focus time if editing
-        } else {
-            shiftLabelInput.focus(); // Focus label if adding
-        }
+        console.log("Modal display set to block.");
     }
 
     function closeModal() {
         modal.style.display = 'none';
         // Always reset edit state and form appearance on close
-        editingShiftLabel = null;
+        editingShiftLabel = null; // Crucial reset
         modalTitle.textContent = "Add New Shift Type";
         modalSubmitButton.textContent = "Save Shift Type";
         shiftLabelInput.disabled = false; // Re-enable label input
         addShiftForm.reset(); // Clear form fields
+        console.log("closeModal finished, editingShiftLabel reset.");
     }
 
     // Handles both Add and Update form submissions
@@ -352,8 +374,11 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        const originalLabel = editingShiftLabel || label; // Use editing label if updating, new label if adding
+
         if (editingShiftLabel) {
             // --- UPDATE existing shift ---
+            console.log("Attempting to update shift:", editingShiftLabel);
             const indexToUpdate = shiftTypes.findIndex(shift => shift.label === editingShiftLabel);
             if (indexToUpdate > -1) {
                 // Update properties
@@ -361,27 +386,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 shiftTypes[indexToUpdate].endTime = endTime;
                 shiftTypes[indexToUpdate].color = color;
                 // shiftTypes[indexToUpdate].label = label; // Only if label editing is enabled
-                console.log("Updated shift:", editingShiftLabel);
+                console.log("Successfully updated shift data for:", editingShiftLabel);
             } else {
+                console.error("Error during update: Could not find shift with label", editingShiftLabel);
                 alert("Error: Could not find the shift to update.");
-                closeModal(); return;
+                closeModal(); return; // Exit early on error
             }
         } else {
             // --- ADD new shift ---
+            console.log("Attempting to add new shift:", label);
             // Check for duplicate label
             if (shiftTypes.some(st => st.label.toLowerCase() === label.toLowerCase())) {
                 alert(`A shift type with the label "${label}" already exists.`);
-                return;
+                return; // Prevent adding duplicate
             }
             // Add to array
             const newShift = { label, startTime, endTime, color, cssClass: '' };
             shiftTypes.push(newShift);
-            console.log("Added new shift:", label);
+            console.log("Successfully added new shift:", label);
         }
 
         // Common actions after add or update
         saveShiftTypes();
-        renderShiftTemplates();
+        renderShiftTemplates(); // Refresh the list which includes templates and buttons
+        // If the edited/added shift was the selected one, update selectedShiftData
+        if (selectedShiftData && selectedShiftData.label === originalLabel) {
+            selectedShiftData = { label: label, startTime: startTime, endTime: endTime, color: color };
+            console.log("Updated selectedShiftData after save:", selectedShiftData);
+        }
         closeModal(); // Close and reset the modal
     }
 
@@ -413,13 +445,12 @@ document.addEventListener('DOMContentLoaded', () => {
             renderCalendar(currentYear, currentMonth); // Re-render needed for day click listeners
         });
 
-        // --- MODIFIED: Add New Shift Button Listener ---
+        // Add New Shift Button Listener (Ensures 'Add' mode)
         addShiftTypeBtn.addEventListener('click', () => {
             console.log("Add New Shift Type button clicked."); // Debug
             // Explicitly ensure we are in 'Add' mode when this button is clicked
-            editingShiftLabel = null; // Reset edit state
-            // No need to reset the form here, openModal will do it based on editingShiftLabel being null
-            openModal();
+            editingShiftLabel = null; // Reset edit state *before* calling openModal
+            openModal(); // openModal will now correctly configure for 'Add' mode
         });
 
         // Modal listeners
@@ -436,7 +467,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Deselect if click is outside relevant interactive areas
             if (!event.target.closest('.shift-templates') && !event.target.closest('.calendar-days') && !event.target.closest('.controls') && !event.target.closest('.modal')) {
                 if (selectedShiftData) {
-                    console.log("Deselecting shift due to outside click.");
+                    // console.log("Deselecting shift due to outside click.");
                     const currentlySelected = shiftTemplatesContainer.querySelector('.selected-shift-template');
                     if (currentlySelected) { currentlySelected.classList.remove('selected-shift-template'); }
                     selectedShiftData = null;
