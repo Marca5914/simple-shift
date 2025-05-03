@@ -1,303 +1,162 @@
+/* General body styling */
 body {
-    font-family: sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     margin: 20px;
-    background-color: #f4f4f4;
+    background-color: #f4f7f6;
+    color: #333;
+    line-height: 1.6;
 }
 
+/* Headings */
 h1, h2, h3 {
     text-align: center;
-    color: #333;
+    color: #2c3e50;
+    margin-bottom: 1em;
 }
 
+h1 { font-size: 2em; }
+h2 { font-size: 1.5em; }
+h3 { font-size: 1.1em; border-bottom: 1px solid #eee; padding-bottom: 5px; margin-bottom: 10px; }
+
+/* Controls section styling */
 .controls {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     text-align: center;
+    padding: 15px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.controls label {
-    margin-right: 5px;
-}
+.controls label { margin-right: 8px; font-weight: 500; }
 
 .controls input[type="month"],
 .controls button {
-    padding: 8px 12px;
-    margin: 0 5px;
+    padding: 10px 15px;
+    margin: 5px;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 5px;
     cursor: pointer;
+    font-size: 0.95em;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    vertical-align: middle; /* Align items nicely on one line */
 }
 
-.controls button:hover {
-    background-color: #e0e0e0;
+.controls input[type="month"] { background-color: #fff; }
+
+.controls button { background-color: #3498db; color: white; border-color: #2980b9; }
+.controls button:hover { background-color: #2980b9; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); }
+
+/* Specific button styling */
+#add-shift-type-btn { background-color: #2ecc71; border-color: #27ae60; }
+#add-shift-type-btn:hover { background-color: #27ae60; }
+
+/* --- New Styles --- */
+/* Export Scope Toggle Button */
+#export-scope-toggle {
+    background-color: #95a5a6; /* Neutral grey */
+    border-color: #7f8c8d;
 }
-
-.scheduler-container {
-    display: flex;
-    gap: 20px;
+#export-scope-toggle:hover {
+    background-color: #7f8c8d;
 }
-
-.shift-templates {
-    width: 200px;
-    padding: 15px;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    border-radius: 5px;
-    height: fit-content; /* Adjust height as needed */
+/* Style when exporting 'All' data */
+#export-scope-toggle.export-all-active {
+    background-color: #f39c12; /* Orange */
+    border-color: #e67e22;
 }
-
-/* Style for the currently selected shift template */
-.shift-template.selected-shift-template {
-    outline: 3px solid #007bff; /* Prominent blue outline */
-    outline-offset: 2px;
-    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5); /* Add a glow effect */
-    transform: scale(1.03); /* Slightly larger */
-}
-
-.shift-templates h3 {
-    margin-top: 0;
-    font-size: 1em;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 5px;
-    margin-bottom: 10px;
-}
-
-.shift-template {
-    padding: 8px;
-    margin-bottom: 8px;
-    border-radius: 4px;
-    cursor: grab;
-    text-align: center;
-    font-size: 0.9em;
-    border: 1px solid #ddd;
-    color: #333; /* Default text color */
-}
-
-/* Define colors for default shifts */
-.shift-day { background-color: #add8e6; /* Light Blue */ }
-.shift-night { background-color: #4682b4; /* Steel Blue */ color: white; }
-.shift-back { background-color: #90ee90; /* Light Green */ }
-
-
-.calendar {
-    flex-grow: 1; /* Take remaining space */
-    border: 1px solid #ccc;
-    background-color: #fff;
-    border-radius: 5px;
-    overflow: hidden; /* Contain borders */
-}
-
-.calendar-header {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    background-color: #eee;
-    font-weight: bold;
-    text-align: center;
-}
-
-.calendar-header > div {
-    padding: 10px 0;
-    border-bottom: 1px solid #ccc;
-    border-right: 1px solid #ccc;
-}
-.calendar-header > div:last-child {
-    border-right: none;
+#export-scope-toggle.export-all-active:hover {
+    background-color: #e67e22;
 }
 
 
-.calendar-days {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    /* grid-auto-rows: 100px; /* Adjust row height as needed */
+/* Clear All Data Button */
+.danger-btn { /* Reusable class for dangerous actions */
+    background-color: #e74c3c; /* Red */
+    border-color: #c0392b;
+}
+.danger-btn:hover {
+    background-color: #c0392b;
 }
 
-.calendar-day {
-    min-height: 100px; /* Ensure minimum height */
-    border-bottom: 1px solid #ccc;
-    border-right: 1px solid #ccc;
-    padding: 5px;
-    position: relative; /* For positioning shift info */
-    box-sizing: border-box; /* Include padding/border in element's total width/height */
+/* Optional: Line break for controls on smaller screens */
+.control-break { display: none; }
+@media (max-width: 900px) { /* Adjust breakpoint as needed */
+    .control-break { display: block; }
 }
+/* --- End New Styles --- */
 
-.calendar-day:nth-child(7n) { /* Remove right border from last column */
-    border-right: none;
-}
 
-/* Style for days outside the current month (optional) */
-.calendar-day.outside-month {
-    background-color: #f9f9f9;
-    color: #aaa;
-}
+/* Main layout container */
+.scheduler-container { display: flex; flex-wrap: wrap; gap: 20px; }
 
-.calendar-day .day-number {
-    font-weight: bold;
-    font-size: 0.8em;
-    margin-bottom: 5px;
-}
+/* Shift templates list */
+.shift-templates { width: 220px; min-width: 200px; padding: 15px; border: 1px solid #e0e0e0; background-color: #ffffff; border-radius: 8px; height: fit-content; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); }
+
+/* Individual shift template */
+.shift-template { padding: 8px 12px; margin-bottom: 10px; border-radius: 5px; cursor: grab; text-align: center; font-size: 0.9em; border: 1px solid #ddd; position: relative; padding-right: 50px; /* Space for edit+delete */ word-wrap: break-word; transition: transform 0.1s ease-in-out; }
+.shift-template:active { cursor: grabbing; transform: scale(1.05); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+.shift-template span.label-text { display: block; margin-right: 5px; }
+
+/* Edit/Delete buttons on templates */
+.edit-shift-type-btn, .delete-shift-type-btn { position: absolute; top: 4px; background: rgba(52, 152, 219, 0.8); color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; line-height: 18px; text-align: center; cursor: pointer; font-weight: bold; padding: 0; box-shadow: 1px 1px 2px rgba(0,0,0,0.15); transition: background-color 0.2s ease; font-family: sans-serif; }
+.edit-shift-type-btn { right: 28px; /* Position left of delete */ }
+.delete-shift-type-btn { right: 4px; background: rgba(231, 76, 60, 0.7); /* Red */ }
+.edit-shift-type-btn:hover { background: rgba(41, 128, 185, 1.0); }
+.delete-shift-type-btn:hover { background: rgba(192, 57, 43, 0.9); }
+
+/* Selected shift template style */
+.shift-template.selected-shift-template { outline: 3px solid #007bff; outline-offset: 2px; box-shadow: 0 0 10px rgba(0, 123, 255, 0.5); transform: scale(1.03); }
+
+/* Calendar container */
+.calendar { flex-grow: 1; border: 1px solid #e0e0e0; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); min-width: 400px; }
+
+/* Calendar header (Mon, Tue, etc.) */
+.calendar-header { display: grid; grid-template-columns: repeat(7, 1fr); background-color: #f8f9fa; font-weight: 600; text-align: center; color: #495057; border-bottom: 1px solid #e0e0e0; }
+.calendar-header > div { padding: 12px 0; border-right: 1px solid #e0e0e0; }
+.calendar-header > div:last-child { border-right: none; }
+
+/* Grid container for calendar days */
+.calendar-days { display: grid; grid-template-columns: repeat(7, 1fr); }
+
+/* Individual day cell in the calendar */
+.calendar-day { min-height: 110px; border-bottom: 1px solid #e0e0e0; border-right: 1px solid #e0e0e0; padding: 8px; position: relative; box-sizing: border-box; transition: background-color 0.2s ease; }
+.calendar-day:nth-child(7n) { border-right: none; }
+.calendar-day.outside-month { background-color: #fdfdfd; color: #ced4da; }
+.calendar-day .day-number { font-weight: bold; font-size: 0.85em; margin-bottom: 5px; color: #6c757d; text-align: right; }
+.calendar-day.outside-month .day-number { color: #e9ecef; }
 
 /* Style for shift placed on calendar */
-.shift-on-calendar {
-    padding: 5px;
-    margin-top: 5px;
-    border-radius: 3px;
-    font-size: 0.85em;
-    text-align: center;
-    border: 1px solid #bbb;
-    word-wrap: break-word; /* Prevent long labels from overflowing */
-}
+.shift-on-calendar { padding: 6px 8px; margin-top: 5px; border-radius: 4px; font-size: 0.85em; text-align: center; border: 1px solid rgba(0, 0, 0, 0.1); word-wrap: break-word; cursor: pointer; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
 
 /* Drag and Drop Highlighting */
-.calendar-day.drag-over {
-    background-color: #e0ffe0; /* Light green highlight */
-    border: 2px dashed #90ee90;
-}
-
+.calendar-day.drag-over { background-color: #e0f2fe; border: 2px dashed #3498db; }
 
 /* Modal Styling */
-.modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
+.modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0, 0, 0, 0.5); animation: fadeIn 0.3s ease-out; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modal-content { background-color: #fefefe; margin: 10% auto; padding: 25px 30px; border: 1px solid #888; width: 90%; max-width: 450px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); position: relative; animation: slideIn 0.3s ease-out; }
+@keyframes slideIn { from { transform: translateY(-30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.close-btn { color: #aaa; position: absolute; top: 10px; right: 15px; font-size: 28px; font-weight: bold; cursor: pointer; line-height: 1; }
+.close-btn:hover, .close-btn:focus { color: black; text-decoration: none; }
+
+/* Form elements inside the modal */
+#add-shift-form div { margin-bottom: 15px; }
+#add-shift-form label { display: block; margin-bottom: 5px; font-weight: 500; font-size: 0.95em; }
+#add-shift-form input[type="text"], #add-shift-form input[type="time"], #add-shift-form input[type="color"] { width: calc(100% - 22px); padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 1em; }
+#add-shift-form input[type="color"] { height: 45px; padding: 5px; cursor: pointer; }
+#add-shift-form input#shift-label:disabled { background-color: #eee; cursor: not-allowed; opacity: 0.7; }
+#add-shift-form button[type="submit"] { background-color: #5cb85c; color: white; padding: 12px 20px; border: none; border-radius: 5px; cursor: pointer; width: 100%; font-size: 1.05em; margin-top: 10px; transition: background-color 0.2s ease; border-color: #4cae4c; }
+#add-shift-form button[type="submit"]:hover { background-color: #4cae4c; }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .scheduler-container { flex-direction: column; }
+    .shift-templates { width: 100%; margin-bottom: 20px; }
+    .calendar { min-width: unset; }
+    .calendar-day { min-height: 80px; }
+    .controls button { padding: 8px 12px; font-size: 0.9em; }
+    h1 { font-size: 1.5em; }
+    .modal-content { margin: 5% auto; width: 95%; padding: 20px; }
 }
 
-.modal-content {
-    background-color: #fefefe;
-    margin: 15% auto; /* 15% from the top and centered */
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%; /* Could be more specific */
-    max-width: 400px;
-    border-radius: 5px;
-    position: relative;
-}
-
-.close-btn {
-    color: #aaa;
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.close-btn:hover,
-.close-btn:focus {
-    color: black;
-    text-decoration: none;
-}
-
-#add-shift-form label {
-    display: block;
-    margin-top: 10px;
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-
-#add-shift-form input[type="text"],
-#add-shift-form input[type="time"],
-#add-shift-form input[type="color"] {
-    width: calc(100% - 22px); /* Adjust for padding/border */
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-#add-shift-form input[type="color"] {
-    height: 40px; /* Make color picker easier to click */
-    padding: 5px;
-}
-
-
-#add-shift-form button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    width: 100%;
-    margin-top: 10px;
-}
-
-.delete-shift-type-btn {
-    position: absolute; /* Position relative to the parent .shift-template */
-    top: 4px;
-    right: 4px;
-    background: rgba(200, 0, 0, 0.6); /* Semi-transparent red */
-    color: white;
-    border: none;
-    border-radius: 50%; /* Make it circular */
-    width: 20px;
-    height: 20px;
-    font-size: 12px;
-    line-height: 16px; /* Adjust for vertical centering */
-    text-align: center;
-    cursor: pointer;
-    font-weight: bold;
-    padding: 0;
-    box-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-    transition: background-color 0.2s ease;
-}
-
-/* Adjust padding on the template to make space for two buttons */
-.shift-template {
-    padding-right: 50px; /* Increased padding for edit + delete */
-    position: relative; /* Crucial for positioning buttons */
-}
-
-/* Style for the Edit button */
-.edit-shift-type-btn {
-    position: absolute;
-    top: 4px;
-    /* Position it to the left of the delete button */
-    right: 28px; /* Adjust as needed based on delete button size/spacing */
-    background: rgba(52, 152, 219, 0.8); /* Blue */
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    font-size: 12px; /* Using a pencil icon font or SVG would be better */
-    line-height: 18px; /* Adjust for vertical centering */
-    text-align: center;
-    cursor: pointer;
-    font-weight: bold;
-    padding: 0;
-    box-shadow: 1px 1px 2px rgba(0,0,0,0.15);
-    transition: background-color 0.2s ease;
-    /* Simple 'E' for edit, consider an icon font like FontAwesome later */
-    font-family: sans-serif;
-}
-
-.edit-shift-type-btn:hover {
-    background: rgba(41, 128, 185, 1.0); /* Darker blue */
-}
-
-/* Ensure label input is visually distinct when disabled */
-#add-shift-form input#shift-label:disabled {
-    background-color: #eee;
-    cursor: not-allowed;
-    opacity: 0.7;
-}
-
-.delete-shift-type-btn:hover {
-    background: rgba(200, 0, 0, 0.9); /* Darker red on hover */
-}
-
-/* Ensure template text doesn't overlap button badly */
-.shift-template span.label-text { /* We'll wrap the text in a span later */
-     display: block; /* Or inline-block */
-     margin-right: 5px; /* Prevent text running under button */
-}
-
-#add-shift-form button:hover {
-    background-color: #45a049;
-}
