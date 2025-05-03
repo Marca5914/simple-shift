@@ -5,18 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shift Scheduler</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📅</text></svg>">
 </head>
 <body>
 
     <h1>Shift Scheduler</h1>
 
-<div class="controls">
+    <div class="controls">
         <label for="month-picker">Select Month:</label>
-        <input type="month" id="month-picker">
-
-        <button id="add-shift-type-btn">Add New Shift Type</button>
-        <button id="export-csv-btn">Export to CSV (Google Calendar)</button>
-        <button id="export-ical-btn">Export to iCal (.ics)</button> </div>
+        <input type="month" id="month-picker" aria-label="Select month and year">
+        <br class="control-break"> <button id="add-shift-type-btn">Add New Shift Type</button>
+        <button id="export-csv-btn">Export to CSV</button>
+        <button id="export-ical-btn">Export to iCal (.ics)</button>
+        <button id="export-scope-toggle" title="Toggle between exporting current month or all data">Mode: Export Month</button>
+        <button id="clear-all-data-btn" class="danger-btn" title="Clear all scheduled shifts and custom types">Clear All Data</button>
+    </div>
 
     <div class="scheduler-container">
         <div id="shift-templates" class="shift-templates">
@@ -25,13 +28,7 @@
 
         <div id="calendar" class="calendar">
             <div class="calendar-header">
-                <div>Mon</div>
-                <div>Tue</div>
-                <div>Wed</div>
-                <div>Thu</div>
-                <div>Fri</div>
-                <div>Sat</div>
-                <div>Sun</div>
+                <div>Mon</div> <div>Tue</div> <div>Wed</div> <div>Thu</div> <div>Fri</div> <div>Sat</div> <div>Sun</div>
             </div>
             <div id="calendar-days" class="calendar-days">
                 </div>
